@@ -22,7 +22,7 @@ bash <( curl -Ls https://raw.githubusercontent.com/aws-containers/amazon-ecs-exe
  cluster_name_place_holder task-arn
 
 Start session inside task image
- aws ssm start-session --target arn:aws:ecs:us-east-1:604830111080:task/DevCluster/b89b058887e34fcc81a09d8345eaf59f
+ aws ssm start-session --target task-arn_place-holder
 
 
  Identify the Linux Distribution
