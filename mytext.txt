@@ -1,0 +1,31 @@
+Create Lambda function
+aws lambda create-function \
+  --function-name MyLambdaFunction \
+  --runtime python3.8 \
+  --role arn:aws:iam::your-account-id:role/execution_role \
+  --handler index.handler \
+  --zip-file fileb:///path/to/your/lambda_function.zip
+
+Streaming body
+  response = s3.get_object(Bucket=bucket_name, Key=file_key)
+    with io.TextIOWrapper(response['Body'], encoding='utf-8') as f:
+        while True:
+            chunk = f.readlines(chunk_size)
+            if not chunk:
+                global flag
+                flag = False
+                break  # Exit the loop if the chunk is empty (end of file)
+            yield chunk
+
+Check if ecs task login is enabled
+bash <( curl -Ls https://raw.githubusercontent.com/aws-containers/amazon-ecs-exec-checker/main/check-ecs-exec.sh )
+ cluster_name_place_holder task-arn
+
+Start session inside task image
+ aws ssm start-session --target arn:aws:ecs:us-east-1:604830111080:task/DevCluster/b89b058887e34fcc81a09d8345eaf59f
+
+
+ Identify the Linux Distribution
+ cat /etc/os-release
+
+
