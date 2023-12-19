@@ -28,4 +28,36 @@ Start session inside task image
  Identify the Linux Distribution
  cat /etc/os-release
 
+import json
+import boto3
+
+def lambda_handler(event, context):
+    # Set your ECS cluster name
+    cluster_name = 'DevCluster'
+    
+    subnet_id = 'subnet-'
+    security_group_ids = ['sg-']
+
+    # Set your ECS task definition ARN
+    task_definition_arn = 'arn:aws:ecs:us-east-1:604830111080:task-definition/myfastapiapp:1'
+
+   
+    ecs_client = boto3.client('ecs')
+
+    response = ecs_client.run_task(
+        cluster=cluster_name,
+        taskDefinition=task_definition_arn,
+        launchType='FARGATE',
+        networkConfiguration={
+            'awsvpcConfiguration': {
+                'subnets': [subnet_id],
+                'securityGroups': security_group_ids,
+                'assignPublicIp': 'ENABLED'
+            }
+        }
+    )
+
+    print(response)
+
+
 
