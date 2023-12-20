@@ -60,4 +60,41 @@ def lambda_handler(event, context):
     print(response)
 
 
+    import os
+import boto3
+
+def lambda_handler(event, context):
+    # Replace these values with your own S3 bucket and file information
+    bucket_name = 'your-s3-bucket-name'
+    key = 'path/to/your/file.txt'
+    local_file_path = '/tmp/your-file.txt'  # Lambda has limited access to local storage, use /tmp directory
+
+    try:
+        # Create an S3 client
+        s3 = boto3.client('s3')
+
+        # Download the file from S3 to a local file in /tmp directory
+        s3.download_file(bucket_name, key, local_file_path)
+        print(f'Successfully downloaded file from S3 to {local_file_path}')
+
+        # Check the size of the downloaded file
+        file_size = os.path.getsize(local_file_path)
+        print(f'Downloaded file size: {file_size} bytes')
+
+        # Perform additional processing with the downloaded file if needed
+
+        return {
+            'statusCode': 200,
+            'body': 'File downloaded successfully'
+        }
+
+    except Exception as e:
+        print(f'Error downloading file: {e}')
+        return {
+            'statusCode': 500,
+            'body': 'Error downloading file'
+        }
+
+
+
 
