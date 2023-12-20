@@ -95,6 +95,80 @@ def lambda_handler(event, context):
             'body': 'Error downloading file'
         }
 
+#build image
+docker build -t my-python-app .
+
+#run image
+docker run -p 4000:80 my-python-app
 
 
+import time
+import threading
+
+exc = True
+
+def count_up_to_200():
+    counter = 0
+    # for i in range(201):
+    #     print(f"Counting up: {i}")
+    for i in range(201):
+        if not exc:
+            break
+        print(f"Counting up: {i}")
+        time.sleep(0.1)  # Simulating some work
+    print("Count up complete!")
+
+def count_down_from_200():
+    for i in range(50, -1, -1):
+        print(f"Counting down: {i}")
+        time.sleep(0.1)  # Simulating some work
+    global exc
+    exc = False
+    print("Count down complete!")
+
+if __name__ == "__main__":
+    # Create threads for parallel execution
+    count_up_thread = threading.Thread(target=count_up_to_200)
+    count_down_thread = threading.Thread(target=count_down_from_200)
+
+    # Start the threads
+    count_up_thread.start()
+    count_down_thread.start()
+
+    # Wait for both threads to finish
+    count_up_thread.join()
+    count_down_thread.join()
+
+    print('Main thread exiting')
+
+
+# Create a cursor
+cursor = conn.cursor()
+
+# Specify the schema and table name
+schema_name = "your_schema_name"
+table_name = "calendar"
+
+# Get the current year
+current_year = datetime.now().year
+
+# Define the columns you want to select
+selected_columns = ["column1", "column2", "column3", "column4"]
+
+# Construct the SQL query with schema, table name, and conditions
+sql_query = f"SELECT {', '.join(selected_columns)} FROM {schema_name}.{table_name} WHERE year = {current_year} AND business_flag = 'Y' AND holiday = 'N';"
+
+# Execute the query
+cursor.execute(sql_query)
+
+# Fetch all the rows
+result = cursor.fetchall()
+
+# Print or process the result as needed
+for row in result:
+    print(row)
+
+# Close the cursor and connection
+cursor.close()
+conn.close()
 
