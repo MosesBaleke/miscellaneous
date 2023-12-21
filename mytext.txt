@@ -189,3 +189,20 @@ ENV NAME World
 
 # Run script.py when the container launches
 CMD ["python", "main.py"]
+
+
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN apt-get update && apt-get install -y nano
+
+EXPOSE 80
+
+ENV NAME world
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
