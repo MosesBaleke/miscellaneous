@@ -208,3 +208,37 @@ ENV NAME world
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
 
 docker run -e AWS_ACCESS_KEY_ID=your_access_key -e AWS_SECRET_ACCESS_KEY=your_secret_key your_image_name
+
+
+import subprocess
+import json
+
+def lambda_handler(event, context):
+    # Set your AWS CLI command
+    aws_cli_command = "aws ecs run-task --cluster YourEcsClusterName --task-definition YourTaskDefinition"
+
+    try:
+        # Run the AWS CLI command using subprocess
+        result = subprocess.run(aws_cli_command, shell=True, check=True, capture_output=True, text=True)
+
+        # Print the output of the command (optional)
+        print(result.stdout)
+
+        # You can also parse the JSON output if needed
+        output_json = json.loads(result.stdout)
+        # Do something with the output JSON
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps('ECS task successfully started!')
+        }
+
+    except subprocess.CalledProcessError as e:
+        # Handle any errors that occurred during the subprocess execution
+        print(f"Error: {e}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps(f'Error: {e}')
+        }
+
+# Note: Replace "YourEcsClusterName" and "YourTaskDefinition" with your actual ECS cluster name and task definition ARN.
