@@ -242,3 +242,6 @@ def lambda_handler(event, context):
         }
 
 # Note: Replace "YourEcsClusterName" and "YourTaskDefinition" with your actual ECS cluster name and task definition ARN.
+
+aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
+aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
