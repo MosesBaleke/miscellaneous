@@ -245,3 +245,28 @@ def lambda_handler(event, context):
 
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+
+import boto3
+
+def stop_fargate_task(cluster_name, task_id):
+    # Initialize ECS client
+    ecs_client = boto3.client('ecs')
+
+    # Stop the Fargate task
+    try:
+        response = ecs_client.stop_task(
+            cluster=cluster_name,
+            task=task_id
+        )
+        print(f"Task {task_id} stopped successfully.")
+    except Exception as e:
+        print(f"Error stopping task {task_id}: {str(e)}")
+
+if __name__ == "__main__":
+    # Replace 'your_cluster_name' and 'your_task_id' with your actual values
+    cluster_name = 'your_cluster_name'
+    task_id = 'your_task_id'
+
+    stop_fargate_task(cluster_name, task_id)
+
