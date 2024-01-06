@@ -270,3 +270,54 @@ if __name__ == "__main__":
 
     stop_fargate_task(cluster_name, task_id)
 
+import boto3
+
+def get_latest_running_task(cluster_name):
+    # Initialize ECS client
+    ecs_client = boto3.client('ecs')
+
+    # List tasks in the cluster
+    response = ecs_client.list_tasks(
+        cluster=cluster_name,
+        desiredStatus='RUNNING',
+        launchType='FARGATE'
+    )
+
+    # Check if there are any running tasks
+    if 'taskArns' in response and response['taskArns']:
+        # Get the latest running task ID
+        latest_running_task = response['taskArns'][0]
+        return latest_running_task
+    else:
+        print("No running Fargate tasks found in the cluster.")
+        return None
+
+def stop_latest_running_fargate_task(cluster_name):
+    # Get the latest running Fargate task ID
+    task_id = get_latest_running_task(cluster_name)
+
+    # Stop the task if a running task is found
+    if task_id:
+        stop_fargate_task(cluster_name, task_id)
+    else:
+        print("No running Fargate tasks to stop.")
+
+def stop_fargate_task(cluster_name, task_id):
+    # Initialize ECS client
+    ecs_client = boto3.client('ecs')
+
+    # Stop the Fargate task
+    try:
+        response = ecs_client.stop_task(
+            cluster=cluster_name,
+            task=task_id
+        )
+        print(f"Task {task_id} stopped successfully.")
+    except Exception as e:
+        print(f"Error stopping task {task_id}: {str(e)}")
+
+if __name__ == "__main__":
+    # Replace 'your_cluster_name' with your actual ECS cluster name
+    cluster_name = 'your_cluster_name'
+
+    stop_latest_running_fargate_task(cluster_name)
